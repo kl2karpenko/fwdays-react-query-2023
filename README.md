@@ -4,4 +4,4 @@
 
 ## `Start the Application`
 
-$ npm run start
+$ `npm run start`
