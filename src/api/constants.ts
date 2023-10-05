@@ -12,8 +12,3 @@ export const QUERY_KEYS = {
     USERS: 'users',
     CURRENT_USER: 'currentUser'
 }
-
-export const PAGE_TYPES = {
-    login: 'login',
-    signup: 'signup'
-}

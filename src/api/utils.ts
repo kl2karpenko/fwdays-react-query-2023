@@ -8,3 +8,5 @@ export async function fetchApi(url, config?: RequestInit) {
 
   return response.json();
 }
+
+export const minsToMiliseconds = (min: number) => min * 1000 * 60;

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -8,29 +10,43 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Button from "@mui/material/Button";
+import { IUser } from "../api/interfaces.ts";
+import {useCurrentUser, useUsers} from "../api";
+import useLogout from "../api/hooks/useLogout.ts";
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
+import useInvalidateCurrentUser from "../api/hooks/useInvalidateCurrentUser.ts";
 
-export interface IUser {
-  avatar: string;
-  email: string;
-  first_name: string;
-  id: number;
-  last_name: string;
-}
+export default function UsersList () {
+  const { data: currentUser } = useCurrentUser();
+  const invalidateCurrentUser = useInvalidateCurrentUser();
+  const logout = useLogout();
+  const navigate = useNavigate();
+  const [page, setPage] = React.useState(1);
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+  const { data: { data: users = [] } = {}, isLoading } = useUsers(page);
 
-export interface IUsersListProps {
-  users: IUser[];
-}
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login')
+    }
+  }, [currentUser, navigate]);
 
-export default function UsersList ({ users = [] }: IUsersListProps) {
-  console.log(users,' users ');
   return (
     <>
-      <Button color="primary" variant={"outlined"}>Logout</Button>
+      <Button color="primary" variant={"outlined"} onClick={async () => {
+        await logout.mutateAsync();
+      }}>Logout</Button>
+      <Button color="primary" variant={"outlined"} onClick={async () => {
+        await invalidateCurrentUser.mutateAsync();
+      }}>Invalidate User</Button>
       <Box mt={3} />
       <Typography variant="h4" gutterBottom>
         Users
       </Typography>
-      <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      {isLoading ? <CircularProgress /> : <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
         {users.map((user: IUser) => {
           const labelId = `checkbox-list-secondary-label-${user.id}`;
           return (
@@ -50,7 +66,9 @@ export default function UsersList ({ users = [] }: IUsersListProps) {
             </ListItem>
           );
         })}
-      </List>
+      </List>}
+
+      <Pagination count={2} page={page} onChange={handlePageChange}  />
     </>
   );
 }

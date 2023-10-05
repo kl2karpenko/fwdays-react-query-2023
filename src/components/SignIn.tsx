@@ -3,26 +3,32 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { PAGE_TYPES } from '../api/constants.ts';
+import MockedUser from "../mocks/user.ts";
+import useLoginUser from "../api/hooks/useLoginUser.ts";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-export default function SignIn({ pageType }: { pageType: string }) {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+export default function SignIn() {
+  const loginUser = useLoginUser();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('name'),
+
+    const tokenInsideData = await loginUser.mutateAsync({
+      email: data.get('email'),
       password: data.get('password'),
     });
+
+    if (tokenInsideData) {
+      navigate('/users');
+    }
   };
 
   return (
@@ -39,18 +45,20 @@ export default function SignIn({ pageType }: { pageType: string }) {
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} />
           <Typography component="h1" variant="h5">
-            {pageType === PAGE_TYPES.login ? 'Sign in' : 'Sign up'}
+            Sign in
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
               fullWidth
-              id="name"
-              label="Username"
-              name="name"
+              id="email"
+              label="Email"
+              type="email"
+              name="email"
               autoComplete="email"
               autoFocus
+              value={MockedUser.email}
             />
             <TextField
               margin="normal"
@@ -60,6 +68,7 @@ export default function SignIn({ pageType }: { pageType: string }) {
               label="Password"
               type="password"
               id="password"
+              value={MockedUser.password}
               autoComplete="current-password"
             />
             <Button
@@ -68,15 +77,8 @@ export default function SignIn({ pageType }: { pageType: string }) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              {pageType === PAGE_TYPES.login ? 'Sign In' : 'Sign Up'}
+              Sign In
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link href={pageType === PAGE_TYPES.login ? '/signup' : '/signin'} variant="body2">
-                  {pageType === PAGE_TYPES.login ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 8, mb: 4 }}>
