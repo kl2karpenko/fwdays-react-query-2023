@@ -9,7 +9,7 @@ export default function useCurrentUser() {
         ...DEFAULT_QUERY_CONFIG,
         queryFn: () => localStorage.getItem('user'),
         onError: () => navigate('/login'),
-        queryKey: QUERY_KEYS.CURRENT_USER,
+        queryKey: [QUERY_KEYS.CURRENT_USER],
         refetchInterval: 2000,
     });
 }

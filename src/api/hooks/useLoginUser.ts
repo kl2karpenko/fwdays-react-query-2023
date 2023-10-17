@@ -12,6 +12,6 @@ export default function useLoginUser() {
             localStorage.setItem('user', data?.token);
             return data?.token;
         },
-        mutationKey: QUERY_KEYS.CURRENT_USER
+        mutationKey: [QUERY_KEYS.CURRENT_USER]
     });
 }
