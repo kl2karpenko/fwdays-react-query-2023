@@ -7,6 +7,13 @@ import { QueryClientProvider } from 'react-query';
 import { queryClient } from './api/queryClient';
 import theme from './theme';
 import './index.css'
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+
+persistQueryClient({
+  queryClient,
+  persister: createSyncStoragePersister({ storage: window.localStorage })
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

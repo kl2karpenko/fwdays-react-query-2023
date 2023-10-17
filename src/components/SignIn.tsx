@@ -10,11 +10,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MockedUser from "../mocks/user.ts";
 import useLoginUser from "../api/hooks/useLoginUser.ts";
 import { useNavigate } from "react-router-dom";
+import {useCurrentUser} from "../api";
+import {useEffect} from "react";
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
   const loginUser = useLoginUser();
+  const { data: currentUser } = useCurrentUser();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +33,12 @@ export default function SignIn() {
       navigate('/users');
     }
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/users')
+    }
+  }, [currentUser]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
