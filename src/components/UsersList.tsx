@@ -8,9 +8,9 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Button from "@mui/material/Button";
-import {IUser, useUsers} from "../api";
+import { IUser, useUsers } from "../api";
 import { useNavigate } from "react-router-dom";
-import useCachedUsers from "../api/hooks/useCachedUsers.ts";
+// import useCachedUsers from "../api/hooks/useCachedUsers.ts";
 
 export default function UsersList ({ page, isLoading }: { page: number; isLoading: boolean; }) {
   const navigate = useNavigate();

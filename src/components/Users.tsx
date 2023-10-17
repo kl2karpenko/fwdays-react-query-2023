@@ -9,8 +9,8 @@ import useLogout from "../api/hooks/useLogout.ts";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useInvalidateUsers from "../api/hooks/useInvalidateUsers.ts";
-import usePrefetchUsers from "../api/hooks/usePrefetchUsers.ts";
-import useCachedUsers from "../api/hooks/useCachedUsers.ts";
+// import usePrefetchUsers from "../api/hooks/usePrefetchUsers.ts";
+// import useCachedUsers from "../api/hooks/useCachedUsers.ts";
 import UsersList from "./UsersList.tsx";
 
 export default function Users () {
